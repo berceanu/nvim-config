@@ -186,8 +186,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Format with black.
-vim.api.nvim_set_keymap('n', '<space>f', ':!black %<CR>:echo "Formatted with Black"<CR>', { noremap = true, silent = true })
+-- Format with Ruff.
+vim.api.nvim_set_keymap('n', '<space>f', ':!ruff format %<CR>:echo "Formatted with Ruff"<CR>', { noremap = true, silent = true })
+
 
 -- Configure `ruff-lsp`.
 -- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
