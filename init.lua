@@ -38,6 +38,7 @@ vim.wo.list = true
 -- Allow clipboard copy paste in neovide
 if vim.g.neovide then
   vim.g.neovide_input_use_logo = 1
+  vim.g.neovide_cursor_vfx_mode = "railgun"
   vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
   vim.keymap.set('v', '<D-c>', '"+y') -- Copy
   vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
@@ -218,6 +219,12 @@ require('lualine').setup{
   options = {
     icons_enabled = true,
     theme = 'gruvbox',
+  },
+  sections = {
+    lualine_c = {{'filename', path = 2}},
+  },
+  inactive_sections = {
+    lualine_c = {{'filename', path = 2}},
   },
 }
 
