@@ -4,6 +4,9 @@ require('plugins')
 -- Set the <leader> key to ","
 vim.g.mapleader = " "
 
+-- Set the neovide font to FiraCode 14 pt
+vim.o.guifont = "FiraCode NF:h14"
+
 -- Disable Ex-mode.
 vim.api.nvim_set_keymap('n', 'Q', '<Nop>', { noremap = true, silent = true })
 
@@ -34,6 +37,7 @@ vim.wo.list = true
 
 -- Allow clipboard copy paste in neovide
 if vim.g.neovide then
+  vim.g.neovide_input_use_logo = 1
   vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
   vim.keymap.set('v', '<D-c>', '"+y') -- Copy
   vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
@@ -41,12 +45,6 @@ if vim.g.neovide then
   vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
   vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
 end
-
--- Allow clipboard copy paste in neovim
--- vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
--- vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
--- vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
--- vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
 
 -- Allow ESC in built-in terminal
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
