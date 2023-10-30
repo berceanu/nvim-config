@@ -3,15 +3,6 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   -- Popular color theme
   use {'ellisonleao/gruvbox.nvim'}
-  -- For syntax highlighting
-  -- To avoid error on first install, use instead:
-  -- use {
-  --     'nvim-treesitter/nvim-treesitter',
-  --     run = function()
-  --         local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-  --     ts_update()
-  --     end,
-  -- }
   -- Better syntax highlighting via tree-sitter
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
   use {'nvim-treesitter/nvim-treesitter-context'}  -- breadcrumbs
@@ -32,7 +23,7 @@ return require('packer').startup(function(use)
       requires = { {'nvim-lua/plenary.nvim'} }
   }
   -- FZF sorter for telescope
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'}
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- Status bar
   use {
     'nvim-lualine/lualine.nvim',
