@@ -10,6 +10,9 @@ vim.o.guifont = "FiraCode NF:h14"
 -- Disable Ex-mode.
 vim.api.nvim_set_keymap('n', 'Q', '<Nop>', { noremap = true, silent = true })
 
+-- Use C-x instead of C-o
+vim.api.nvim_set_keymap('n', '<C-x>', '<C-o>', { noremap = true, silent = true })
+
 -- Remove backup and swap files.
 vim.o.backup = false
 vim.o.swapfile = false
