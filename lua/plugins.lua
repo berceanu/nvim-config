@@ -12,18 +12,18 @@ return require('packer').startup(function(use)
        'neovim/nvim-lspconfig',
       }
   -- GitHub Copilot
-  use { "zbirenbaum/copilot.lua", cmd = "Copilot", event = "InsertEnter",
-    config = function()
-      require("copilot").setup({})
-    end,
-  }
+  -- use { "zbirenbaum/copilot.lua", cmd = "Copilot", event = "InsertEnter",
+  --  config = function()
+  --    require("copilot").setup({})
+  --  end,
+  --}
   -- Telescope
   use {
       'nvim-telescope/telescope.nvim', branch = '0.1.x',
       requires = { {'nvim-lua/plenary.nvim'} }
   }
   -- FZF sorter for telescope
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  -- use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- Status bar
   use {
     'nvim-lualine/lualine.nvim',
