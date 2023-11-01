@@ -189,13 +189,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Format with Ruff.
-vim.api.nvim_set_keymap('n', '<space>f', ':!ruff format %<CR>:echo "Formatted with Ruff"<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<space>f', ':!ruff format %<CR>:echo "Formatted with Ruff"<CR>', { noremap = true, silent = true })
 
 
 -- Configure `ruff-lsp`.
 -- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
 -- For the default config, along with instructions on how to customize the settings
-require('lspconfig').ruff_lsp.setup{}
+-- require('lspconfig').ruff_lsp.setup{}
 
 -- Configure typst language server
 require('lspconfig').typst_lsp.setup{
