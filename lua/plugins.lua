@@ -12,11 +12,11 @@ return require('packer').startup(function(use)
        'neovim/nvim-lspconfig',
       }
   -- GitHub Copilot
-  -- use { "zbirenbaum/copilot.lua", cmd = "Copilot", event = "InsertEnter",
-  --  config = function()
-  --    require("copilot").setup({})
-  --  end,
-  --}
+--  use { "zbirenbaum/copilot.lua", cmd = "Copilot", 
+--    config = function()
+--      require("copilot").setup({})
+--    end,
+--  }
   -- Telescope
   use {
       'nvim-telescope/telescope.nvim', branch = '0.1.x',

@@ -1,6 +1,9 @@
 -- load lua/plugins.lua
 require('plugins')
 
+-- Disable mouse support
+vim.opt.mouse = ""
+
 -- Set the <leader> key to ","
 vim.g.mapleader = " "
 
@@ -248,5 +251,5 @@ require'treesitter-context'.setup{
 }
 
 -- GitHub Copilot support
-vim.api.nvim_set_keymap('n', '<leader>t', ':lua require("copilot.suggestion").toggle_auto_trigger()<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>t', ':lua require("copilot.suggestion").toggle_auto_trigger()<CR>', { noremap = true, silent = true })
 
