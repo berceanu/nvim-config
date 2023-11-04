@@ -1,9 +1,6 @@
 -- load lua/plugins.lua
 require('plugins')
 
--- Disable mouse support
-vim.opt.mouse = ""
-
 -- Set the <leader> key to ","
 vim.g.mapleader = " "
 
