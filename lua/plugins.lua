@@ -11,6 +11,8 @@ return require('packer').startup(function(use)
        'williamboman/mason-lspconfig.nvim',
        'neovim/nvim-lspconfig',
       }
+  -- Indentation guide
+  use "lukas-reineke/indent-blankline.nvim"
   -- GitHub Copilot
 --  use { "zbirenbaum/copilot.lua", cmd = "Copilot", 
 --    config = function()

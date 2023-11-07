@@ -250,3 +250,5 @@ require'treesitter-context'.setup{
 -- GitHub Copilot support
 -- vim.api.nvim_set_keymap('n', '<leader>t', ':lua require("copilot.suggestion").toggle_auto_trigger()<CR>', { noremap = true, silent = true })
 
+-- Indentation guide
+require("ibl").setup()
