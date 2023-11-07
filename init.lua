@@ -252,3 +252,7 @@ require'treesitter-context'.setup{
 
 -- Indentation guide
 require("ibl").setup()
+
+-- Comment lines
+require('Comment').setup()
+

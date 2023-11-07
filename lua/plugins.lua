@@ -13,6 +13,8 @@ return require('packer').startup(function(use)
       }
   -- Indentation guide
   use "lukas-reineke/indent-blankline.nvim"
+  -- Comment code
+  use "numToStr/Comment.nvim"
   -- GitHub Copilot
 --  use { "zbirenbaum/copilot.lua", cmd = "Copilot", 
 --    config = function()
