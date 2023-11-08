@@ -10,6 +10,8 @@ vim.g.mapleader = " "
 
 -- Set the neovide font to FiraCode 14 pt
 vim.opt.guifont = "FiraCode NF:h14"
+-- Highlight the current line
+vim.opt.cursorline = true
 
 -- Disable Ex-mode.
 vim.api.nvim_set_keymap('n', 'Q', '<Nop>', { noremap = true, silent = true })
