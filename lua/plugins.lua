@@ -41,5 +41,11 @@ return require('packer').startup(function(use)
   use 'saadparwaiz1/cmp_luasnip'
   -- Snippets plugin
   use 'L3MON4D3/LuaSnip' 
-  -- Add other plugins below this line as needed
+  -- File explorer tree
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional
+    },
+  }
 end)

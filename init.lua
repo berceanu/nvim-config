@@ -1,3 +1,7 @@
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- load lua/plugins.lua
 require('plugins')
 
@@ -255,4 +259,7 @@ require("ibl").setup()
 
 -- Comment lines
 require('Comment').setup()
+
+-- File tree explorer
+require("nvim-tree").setup()
 
