@@ -9,7 +9,7 @@ require('plugins')
 vim.g.mapleader = " "
 
 -- Set the neovide font to FiraCode 14 pt
-vim.o.guifont = "FiraCode NF:h14"
+vim.opt.guifont = "FiraCode NF:h14"
 
 -- Disable Ex-mode.
 vim.api.nvim_set_keymap('n', 'Q', '<Nop>', { noremap = true, silent = true })
@@ -18,8 +18,8 @@ vim.api.nvim_set_keymap('n', 'Q', '<Nop>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-x>', '<C-o>', { noremap = true, silent = true })
 
 -- Remove backup and swap files.
-vim.o.backup = false
-vim.o.swapfile = false
+vim.opt.backup = false
+vim.opt.swapfile = false
 
 -- Alias accidental SHIFTs.
 vim.api.nvim_set_keymap('c', 'W<CR>', 'w<CR>', { noremap = true, silent = true })
@@ -39,7 +39,7 @@ vim.cmd('set formatoptions-=r')
 vim.cmd('set formatoptions-=o')
 
 -- Show special characters
-vim.o.listchars = "eol:$,tab:>-,trail:~,extends:>,precedes:<"
+vim.opt.listchars = "eol:$,tab:>-,trail:~,extends:>,precedes:<"
 vim.wo.list = true
 
 -- Allow clipboard copy paste in neovide
@@ -58,8 +58,8 @@ end
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
 
 -- Use gruvbox color theme
-vim.o.termguicolors = true
-vim.o.background = "dark" -- "dark/light"
+vim.opt.termguicolors = true
+vim.opt.background = "dark" -- "dark/light"
 vim.cmd([[colorscheme gruvbox]])
 
 -- Disable virtual LSP warnings/errors
@@ -262,4 +262,7 @@ require('Comment').setup()
 
 -- File tree explorer
 require("nvim-tree").setup()
+
+-- Tab support
+require("bufferline").setup{}
 
