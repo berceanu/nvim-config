@@ -54,6 +54,12 @@ vim.cmd('set formatoptions-=c')
 vim.cmd('set formatoptions-=r')
 vim.cmd('set formatoptions-=o')
 
+-- Associate .profile files with shell scripts
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "*.profile",
+    command = "setfiletype sh",
+})
+
 -- Show special characters
 vim.opt.listchars = "eol:$,tab:>-,trail:~,extends:>,precedes:<"
 vim.wo.list = true
