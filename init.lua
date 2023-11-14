@@ -235,6 +235,7 @@ lspconfig.lua_ls.setup({
 
 -- Configure typst language server
 require('lspconfig').typst_lsp.setup{
+  capabilities = capabilities,
   settings = {
     exportPdf = "onType" -- Choose onType, onSave or never.
   }
