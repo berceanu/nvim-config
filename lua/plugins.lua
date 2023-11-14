@@ -10,9 +10,21 @@ return {
   'williamboman/mason-lspconfig.nvim',
   'neovim/nvim-lspconfig',
   -- Indentation guide
-  "lukas-reineke/indent-blankline.nvim",
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {},
+    config = function()
+      require("ibl").setup()
+    end,
+  },
   -- Comment code
-  "numToStr/Comment.nvim",
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup()
+    end,
+  },
   -- GitHub Copilot
   --  { "zbirenbaum/copilot.lua", cmd = "Copilot", 
   --    config = function()
@@ -22,33 +34,25 @@ return {
   -- Telescope
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
   -- FZF sorter for telescope
-  -- { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   -- Status bar
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons'},
   },
   -- Autocompletion plugin
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-    },
-  },
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-nvim-lsp",
   -- Snippets source for nvim-cmp
-  'saadparwaiz1/cmp_luasnip',
+  "saadparwaiz1/cmp_luasnip",
   -- Snippets plugin
-  'L3MON4D3/LuaSnip',
+  "L3MON4D3/LuaSnip",
   -- File explorer tree
   {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
@@ -61,6 +65,18 @@ return {
       require("neo-tree").setup()
     end,
   },
-  "folke/which-key.nvim",
-  "folke/neodev.nvim",
+  {
+    "folke/which-key.nvim",
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require("which-key").setup()
+    end,
+  },
+  {
+    "folke/neodev.nvim",
+    config = function()
+      require("neodev").setup()
+    end,
+  },
 }

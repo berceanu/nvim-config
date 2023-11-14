@@ -3,6 +3,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = " "
 
+
 -- Map 'jj' to escape insert mode
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true, silent = true})
 
@@ -87,11 +88,18 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 -- Use treesitter for syntax highlighting
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all", -- or install a subset of parsers
+  ignore_install = {},
+  sync_install = false,
+  auto_install = false,
   highlight = {
       enable = true,
       additional_vim_regex_highlighting = false,
   },
 }
+
+-- Set up mason for installing various language servers
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -141,14 +149,12 @@ cmp.setup {
   },
 }
 
--- Set up mason for installing various language servers
-require("mason").setup()
-require("mason-lspconfig").setup()
 
 -- After setting up mason-lspconfig we may set up servers via lspconfig
 
 -- Setup language servers.
 local lspconfig = require('lspconfig')
+
 lspconfig.pyright.setup{
     cmd = {"pyright-langserver", "--stdio"},
     capabilities = capabilities,
@@ -171,10 +177,10 @@ lspconfig.pyright.setup{
 
 -- Global mappings for LSP
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
@@ -192,24 +198,35 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wl', function()
+    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<leader>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<space>z', function()
+    vim.keymap.set('n', '<leader>z', function()
       vim.lsp.buf.format { async = true }
     end, opts)
   end,
 })
 
--- Format with Ruff.
--- vim.api.nvim_set_keymap('n', '<space>f', ':!ruff format %<CR>:echo "Formatted with Ruff"<CR>', { noremap = true, silent = true })
+-- Setup lua_ls and enable call snippets
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Replace"
+      }
+    }
+  }
+})
 
+-- Format with Ruff.
+-- vim.api.nvim_set_keymap('n', '<leader>f', ':!ruff format %<CR>:echo "Formatted with Ruff"<CR>', { noremap = true, silent = true })
 
 -- Configure `ruff-lsp`.
 -- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
@@ -218,10 +235,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- Configure typst language server
 require('lspconfig').typst_lsp.setup{
-	settings = {
-		exportPdf = "onType" -- Choose onType, onSave or never.
-        -- serverPath = "" -- Normally, there is no need to uncomment it.
-	}
+  settings = {
+    exportPdf = "onType" -- Choose onType, onSave or never.
+  }
 }
 
 -- Associate .typ files with typst filetype
@@ -268,9 +284,3 @@ require'treesitter-context'.setup{
 
 -- GitHub Copilot support
 -- vim.api.nvim_set_keymap('n', '<leader>t', ':lua require("copilot.suggestion").toggle_auto_trigger()<CR>', { noremap = true, silent = true })
-
--- Indentation guide
-require("ibl").setup()
-
--- Comment lines
-require('Comment').setup()
