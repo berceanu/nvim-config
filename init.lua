@@ -1,12 +1,25 @@
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
--- load lua/plugins.lua
-require('plugins')
-
--- Set the <leader> key to ","
 vim.g.mapleader = " "
+
+-- Map 'jj' to escape insert mode
+vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true, silent = true})
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup("plugins")
 
 -- Set the neovide font to FiraCode 14 pt
 vim.opt.guifont = "FiraCode NF:h14"
@@ -261,10 +274,3 @@ require("ibl").setup()
 
 -- Comment lines
 require('Comment').setup()
-
--- File tree explorer
-require("nvim-tree").setup()
-
--- Tab support
-require("bufferline").setup{}
-
