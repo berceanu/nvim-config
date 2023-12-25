@@ -22,8 +22,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins")
 
--- Set the neovide font to FiraCode 14 pt
-vim.opt.guifont = "FiraCode NF:h14"
 -- Highlight the current line
 vim.opt.cursorline = true
 
