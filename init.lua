@@ -58,6 +58,12 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     command = "setfiletype sh",
 })
 
+-- Associate .param files with C++ code
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "*.param",
+    command = "setfiletype cpp",
+})
+
 -- Show special characters
 vim.opt.listchars = "eol:$,tab:>-,trail:~,extends:>,precedes:<"
 vim.wo.list = true
