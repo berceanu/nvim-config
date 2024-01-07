@@ -50,6 +50,8 @@ return {
   "saadparwaiz1/cmp_luasnip",
   -- Snippets plugin
   "L3MON4D3/LuaSnip",
+  -- Diffview.nvim
+  "sindrets/diffview.nvim",
   -- File explorer tree
   {
     "nvim-neo-tree/neo-tree.nvim",
