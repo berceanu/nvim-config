@@ -52,9 +52,21 @@ vim.cmd('set formatoptions-=c')
 vim.cmd('set formatoptions-=r')
 vim.cmd('set formatoptions-=o')
 
--- Associate .profile files with shell scripts
+-- Associate various files with shell scripts
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     pattern = "*.profile",
+    command = "setfiletype sh",
+})
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "*.profile.example",
+    command = "setfiletype sh",
+})
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "*.tpl",
+    command = "setfiletype sh",
+})
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "*.cfg",
     command = "setfiletype sh",
 })
 
