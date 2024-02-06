@@ -107,6 +107,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
+-- Load treesitter grammar for org
+require('orgmode').setup_ts_grammar()
+
 -- Use treesitter for syntax highlighting
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all", -- or install a subset of parsers
@@ -115,12 +118,9 @@ require'nvim-treesitter.configs'.setup {
   auto_install = false,
   highlight = {
       enable = true,
-      additional_vim_regex_highlighting = { 'org' },
+      additional_vim_regex_highlighting = false,
   },
 }
-
--- Load treesitter grammar for org
-require('orgmode').setup_ts_grammar()
 
 -- Setup orgmode
 require('orgmode').setup({
