@@ -115,9 +115,18 @@ require'nvim-treesitter.configs'.setup {
   auto_install = false,
   highlight = {
       enable = true,
-      additional_vim_regex_highlighting = false,
+      additional_vim_regex_highlighting = { 'org' },
   },
 }
+
+-- Load treesitter grammar for org
+require('orgmode').setup_ts_grammar()
+
+-- Setup orgmode
+require('orgmode').setup({
+  org_agenda_files = '~/orgfiles/**/*',
+  org_default_notes_file = '~/orgfiles/refile.org',
+})
 
 -- Set up mason for installing various language servers
 require("mason").setup()
