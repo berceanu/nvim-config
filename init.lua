@@ -95,10 +95,10 @@ end
 -- Allow ESC in built-in terminal
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
 
--- Use gruvbox color theme
+-- Use catpuccin color theme
 vim.opt.termguicolors = true
 vim.opt.background = "dark" -- "dark/light"
-vim.cmd([[colorscheme gruvbox]])
+vim.cmd([[colorscheme catppuccin-mocha]])
 
 -- Disable virtual LSP warnings/errors
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -284,7 +284,7 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 require('lualine').setup{
   options = {
     icons_enabled = true,
-    theme = 'gruvbox',
+    theme = 'catppuccin',
   },
   sections = {
     lualine_c = {{'filename', path = 2}},
