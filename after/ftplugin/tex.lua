@@ -5,8 +5,16 @@ local opt = vim.opt_local
 -- Soft-wrap prose without inserting hard line breaks.
 opt.wrap = true
 opt.linebreak = true
-opt.spell = true
+
+-- Spell-check OFF by default (physics jargon isn't in the dictionary, so the
+-- underlines are mostly noise). Toggle on for a proofreading pass with
+-- <localleader>ss; then <localleader>z fixes the word under the cursor.
+opt.spell = false
 opt.spelllang = { "en_us" }
+vim.keymap.set("n", "<localleader>ss", function()
+  vim.wo.spell = not vim.wo.spell
+  vim.notify("spell " .. (vim.wo.spell and "on" or "off"))
+end, { buffer = true, desc = "Toggle spell check" })
 
 -- Conceal maths/markup (\alpha → α, \\ hidden, etc.); reveal on the cursor line.
 opt.conceallevel = 2
