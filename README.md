@@ -1,81 +1,97 @@
-# nvim-config/
+# nvim-config
 
-<a href="https://dotfyle.com/berceanu/nvim-config"><img src="https://dotfyle.com/berceanu/nvim-config/badges/plugins?style=flat" /></a>
-<a href="https://dotfyle.com/berceanu/nvim-config"><img src="https://dotfyle.com/berceanu/nvim-config/badges/leaderkey?style=flat" /></a>
-<a href="https://dotfyle.com/berceanu/nvim-config"><img src="https://dotfyle.com/berceanu/nvim-config/badges/plugin-manager?style=flat" /></a>
+A LaTeX-focused Neovim configuration. Pure Lua, no external plugin manager —
+plugins are managed by the built-in [`vim.pack`](https://neovim.io/doc/user/pack.html)
+(Neovim **0.12+**).
 
+Based on the [Sussman Lab (Neo)vim + LaTeX guide](https://www.dmsussman.org/resources/vimandlatex/)
+and Elijan Mastnak's [Vim + LaTeX series](https://ejmastnak.com/tutorials/vim-latex/intro/),
+adapted for macOS + Skim.
 
-## Install Instructions
+## Requirements
 
- > Install requires Neovim 0.9+. Always review the code before installing a configuration.
+- Neovim ≥ 0.12
+- A TeX distribution with `latexmk` (MacTeX / TeX Live)
+- [Skim.app](https://skim-app.sourceforge.io/) as the PDF viewer
+- `cargo` (builds blink.cmp's fuzzy matcher) and `make`/`cc` (builds LuaSnip's
+  jsregexp) — both optional; the config degrades gracefully without them
 
-Clone the repository and install the plugins:
+## Layout
 
-```sh
-git clone git@github.com:berceanu/nvim-config ~/.config/berceanu/nvim-config
+```
+init.lua                  enables the module cache; entry point is plugin/
+plugin/                   auto-sourced at startup, in filename order
+  00options.lua           options + leader keys (must load first)
+  02autocmds.lua          general autocommands
+  03keymaps.lua           global key maps
+  10colorscheme.lua       catppuccin
+  20oil.lua               oil.nvim file explorer  (press -)
+  30luasnip.lua           LuaSnip snippet engine  (+ jsregexp autobuild)
+  40surround.lua          nvim-surround
+  50autocomplete.lua      blink.cmp + blink.compat + cmp-vimtex
+  80latex.lua             VimTeX (set BEFORE loading; Skim viewer)
+after/ftplugin/
+  tex.lua                 spell, conceal, soft-wrap, local maps
+  bib.lua                 BibTeX buffer settings
+lua/luasnip/
+  all.lua                 global snippets
+  tex.lua                 LaTeX snippets (math-aware autosnippets)
+scripts/
+  setup-skim.sh           configure Skim for inverse search (run once)
 ```
 
-Open Neovim with this config:
+## First launch
 
-```sh
-NVIM_APPNAME=berceanu/nvim-config/ nvim
-```
+1. `nvim` — `vim.pack` clones every plugin on the first start. LuaSnip's
+   jsregexp and blink.cmp's Rust matcher build in the background; restart once
+   they finish (you'll get a notification).
+2. Configure Skim for inverse search (once):
+   ```sh
+   ~/.config/nvim/scripts/setup-skim.sh
+   osascript -e 'quit app "Skim"'   # then reopen Skim
+   ```
+   In Skim → Settings → Sync you should now see the preset command `nvim`.
 
-## Plugins
+## LaTeX workflow (localleader is `\`)
 
-### comment
+| Key        | Action                                   |
+|------------|------------------------------------------|
+| `\ll`      | toggle continuous compilation (latexmk)  |
+| `\lv`      | forward-search: jump Skim to the cursor  |
+| `\lc`      | clean auxiliary files                    |
+| `\le`      | show the error/warning list              |
+| `\lt`      | table of contents                        |
+| `\lk`      | stop compilation                         |
+| `Cmd-Shift-Click` in Skim | inverse-search back to the source line |
 
-+ [numToStr/Comment.nvim](https://dotfyle.com/plugins/numToStr/Comment.nvim)
-### completion
+Text objects: `ie`/`ae` (environment), `i$`/`a$` (maths), `id`/`ad`
+(delimiter). Motions: `]]`/`[[` (sections), `]m`/`[m` (environments).
 
-+ [hrsh7th/nvim-cmp](https://dotfyle.com/plugins/hrsh7th/nvim-cmp)
-+ [zbirenbaum/copilot.lua](https://dotfyle.com/plugins/zbirenbaum/copilot.lua)
-### editing-support
+### Snippets
 
-+ [nvim-treesitter/nvim-treesitter-context](https://dotfyle.com/plugins/nvim-treesitter/nvim-treesitter-context)
-### file-explorer
+Math-aware, expanded by [LuaSnip](https://github.com/L3MON4D3/LuaSnip). A few
+examples (see `lua/luasnip/tex.lua` for the full list, edit and reload with
+`<leader>L`):
 
-+ [nvim-neo-tree/neo-tree.nvim](https://dotfyle.com/plugins/nvim-neo-tree/neo-tree.nvim)
-### fuzzy-finder
+| Trigger | Expands to            | Where        |
+|---------|-----------------------|--------------|
+| `mk`    | `$…$`                 | outside math |
+| `dm`    | display-math block    | outside math |
+| `//`    | `\frac{…}{…}`         | inside math  |
+| `beg`   | `\begin{}…\end{}`     | line start   |
+| `;a`    | `\alpha` (`;b` → β …) | inside math  |
 
-+ [nvim-telescope/telescope.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope.nvim)
-### git
+## Completion keys
 
-+ [sindrets/diffview.nvim](https://dotfyle.com/plugins/sindrets/diffview.nvim)
-### indent
+`<C-space>` open · `<C-n>`/`<C-p>` select · `<C-y>` accept · `<Tab>`/`<S-Tab>`
+jump between snippet fields.
 
-+ [lukas-reineke/indent-blankline.nvim](https://dotfyle.com/plugins/lukas-reineke/indent-blankline.nvim)
-### lsp
+## Managing plugins
 
-+ [neovim/nvim-lspconfig](https://dotfyle.com/plugins/neovim/nvim-lspconfig)
-### lsp-installer
+- `:lua vim.pack.update()` — update all plugins (opens a confirmable diff)
+- `:lua =vim.pack.get()` — list installed plugins
+- Add one: put `vim.pack.add({ "https://github.com/owner/repo" })` in a
+  `plugin/*.lua` file, then restart.
 
-+ [williamboman/mason.nvim](https://dotfyle.com/plugins/williamboman/mason.nvim)
-### lua-colorscheme
-
-+ [ellisonleao/gruvbox.nvim](https://dotfyle.com/plugins/ellisonleao/gruvbox.nvim)
-### note-taking
-
-+ [nvim-orgmode/orgmode](https://dotfyle.com/plugins/nvim-orgmode/orgmode)
-### nvim-dev
-
-+ [MunifTanjim/nui.nvim](https://dotfyle.com/plugins/MunifTanjim/nui.nvim)
-+ [folke/neodev.nvim](https://dotfyle.com/plugins/folke/neodev.nvim)
-+ [nvim-lua/plenary.nvim](https://dotfyle.com/plugins/nvim-lua/plenary.nvim)
-### plugin-manager
-
-+ [folke/lazy.nvim](https://dotfyle.com/plugins/folke/lazy.nvim)
-### snippet
-
-+ [L3MON4D3/LuaSnip](https://dotfyle.com/plugins/L3MON4D3/LuaSnip)
-### statusline
-
-+ [nvim-lualine/lualine.nvim](https://dotfyle.com/plugins/nvim-lualine/lualine.nvim)
-### syntax
-
-+ [nvim-treesitter/nvim-treesitter](https://dotfyle.com/plugins/nvim-treesitter/nvim-treesitter)
-## Language Servers
-
-
-
- This readme was generated by [Dotfyle](https://dotfyle.com)
+The previous lazy.nvim configuration is preserved on the `archive/lazy-nvim`
+git branch.

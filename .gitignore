@@ -1,1 +1,6 @@
-plugin
+# Neovim writes plugins, state, and the vim.pack lockfile under
+# ~/.local/share/nvim and ~/.local/state/nvim, not inside this repo, so there
+# is little to ignore. Keep out editor scratch files only.
+*.swp
+*.swo
+tags
