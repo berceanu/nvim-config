@@ -8,8 +8,9 @@ vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
 local ok, ts = pcall(require, "nvim-treesitter")
 if ok and ts.install and vim.fn.executable("tree-sitter") == 1 then
   ts.install({
-    "python", "lua", "bash", "json", "yaml", "toml", "markdown",
-    "markdown_inline", "typst", "vimdoc", "query", "regex", "diff", "gitcommit",
+    "python", "rust", "cpp", "c", "lua", "bash", "json", "yaml", "toml",
+    "markdown", "markdown_inline", "typst", "vimdoc", "query", "regex",
+    "diff", "gitcommit",
   })
 end
 
