@@ -13,8 +13,8 @@ adapted for macOS + Skim.
 - Neovim ≥ 0.12
 - A TeX distribution with `latexmk` (MacTeX / TeX Live)
 - [Skim.app](https://skim-app.sourceforge.io/) as the PDF viewer
-- `cargo` (builds blink.cmp's fuzzy matcher) and `make`/`cc` (builds LuaSnip's
-  jsregexp) — both optional; the config degrades gracefully without them
+
+Pure Lua — **no compilers or build tools required**. Every plugin is Lua-only.
 
 ## Layout
 
@@ -26,9 +26,14 @@ plugin/                   auto-sourced at startup, in filename order
   03keymaps.lua           global key maps
   10colorscheme.lua       catppuccin
   20oil.lua               oil.nvim file explorer  (press -)
-  30luasnip.lua           LuaSnip snippet engine  (+ jsregexp autobuild)
+  30luasnip.lua           LuaSnip snippet engine
   40surround.lua          nvim-surround
-  50autocomplete.lua      blink.cmp + blink.compat + cmp-vimtex
+  50completion.lua        native completion ergonomics (Tab-driven, no plugin)
+  60whichkey.lua          which-key
+  62fzflua.lua            fzf-lua finder
+  64gitsigns.lua          gitsigns
+  66nabla.lua             nabla (math preview)
+  70statusline.lua        native Lua statusline (no plugin)
   80latex.lua             VimTeX (set BEFORE loading; Skim viewer)
 after/ftplugin/
   tex.lua                 spell, conceal, soft-wrap, local maps
@@ -42,9 +47,8 @@ scripts/
 
 ## First launch
 
-1. `nvim` — `vim.pack` clones every plugin on the first start. LuaSnip's
-   jsregexp and blink.cmp's Rust matcher build in the background; restart once
-   they finish (you'll get a notification).
+1. `nvim` — `vim.pack` clones every plugin on the first start. Nothing to
+   compile; restart once cloning finishes.
 2. Configure Skim for inverse search (once):
    ```sh
    ~/.config/nvim/scripts/setup-skim.sh
@@ -81,10 +85,15 @@ examples (see `lua/luasnip/tex.lua` for the full list, edit and reload with
 | `beg`   | `\begin{}…\end{}`     | line start   |
 | `;a`    | `\alpha` (`;b` → β …) | inside math  |
 
-## Completion keys
+## Completion (native — no plugin)
 
-`<C-space>` open · `<C-n>`/`<C-p>` select · `<C-y>` accept · `<Tab>`/`<S-Tab>`
-jump between snippet fields.
+Completion comes from Neovim itself: VimTeX sets `omnifunc` in `.tex` buffers
+(`\cite`, `\ref`, environments, files) and LuaSnip handles snippets.
+
+`<Tab>` open completion / next item / expand-jump snippet · `<S-Tab>` previous ·
+`<C-Space>` force the omni menu · `<CR>` confirm · `<C-k>`/`<C-j>` snippet
+expand/jump. Add an LSP later and `vim.lsp.completion.enable({autotrigger=true})`
+gives an as-you-type popup with zero plugins.
 
 ## Managing plugins
 
