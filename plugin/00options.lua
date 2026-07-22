@@ -71,8 +71,9 @@ vim.diagnostic.config({
 
 -- Over SSH there's no local display, so route the "+"/"*" clipboard through
 -- OSC 52: yanks land in the terminal that opened the ssh session (your Mac's
--- Ghostty). Only enabled on remote sessions; local macOS clipboard is untouched.
-if vim.env.SSH_TTY and vim.env.SSH_TTY ~= "" then
+-- Ghostty). SSH_CONNECTION (not SSH_TTY) is used because tmux propagates it to
+-- panes. Only enabled on remote sessions; local macOS clipboard is untouched.
+if vim.env.SSH_CONNECTION and vim.env.SSH_CONNECTION ~= "" then
   local osc52 = require("vim.ui.clipboard.osc52")
   vim.g.clipboard = {
     name = "OSC52",
