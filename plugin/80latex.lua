@@ -10,9 +10,14 @@ vim.g.tex_flavor = "latex"
 -- Use LuaSnip for insert-mode expansions instead of VimTeX's built-in imaps.
 vim.g.vimtex_imaps_enabled = 0
 
--- Compiler: latexmk (the default) runs continuously and re-typesets on save,
--- passing -synctex=1 so forward/inverse search work.
-vim.g.vimtex_compiler_method = "latexmk"
+-- Compiler: latexmk by default (continuous, -synctex=1 for forward/inverse
+-- search). On a host with no TeX distribution but tectonic available (e.g. a
+-- headless Linux box), fall back to tectonic — a self-contained LaTeX engine.
+if vim.fn.executable("latexmk") == 0 and vim.fn.executable("tectonic") == 1 then
+  vim.g.vimtex_compiler_method = "tectonic"
+else
+  vim.g.vimtex_compiler_method = "latexmk"
+end
 
 -- Don't auto-open the quickfix window on warnings; :VimtexErrors shows it.
 vim.g.vimtex_quickfix_mode = 0
