@@ -68,3 +68,15 @@ vim.diagnostic.config({
   severity_sort = true,
   float = { border = "single" },
 })
+
+-- Over SSH there's no local display, so route the "+"/"*" clipboard through
+-- OSC 52: yanks land in the terminal that opened the ssh session (your Mac's
+-- Ghostty). Only enabled on remote sessions; local macOS clipboard is untouched.
+if vim.env.SSH_TTY and vim.env.SSH_TTY ~= "" then
+  local osc52 = require("vim.ui.clipboard.osc52")
+  vim.g.clipboard = {
+    name = "OSC52",
+    copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
+  }
+end

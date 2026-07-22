@@ -25,13 +25,18 @@ vim.g.vimtex_quickfix_ignore_filters = {
 }
 
 -- ---------------------------------------------------------------------------
--- PDF viewer: Skim (macOS). Configure it once for inverse search with:
---   scripts/setup-skim.sh   (sets Skim's PDF-TeX Sync preset to Neovim)
+-- PDF viewer. Skim on macOS (configure once with scripts/setup-skim.sh). On
+-- Linux/remote there's usually no viewer, so fall back to the generic one —
+-- VimTeX still loads fine; only \lv is inert on a headless box.
 -- ---------------------------------------------------------------------------
-vim.g.vimtex_view_method = "skim"
-vim.g.vimtex_view_skim_sync = 1 -- forward-search to Skim after each compile
-vim.g.vimtex_view_skim_activate = 1 -- bring Skim to the foreground on view
-vim.g.vimtex_view_skim_reading_bar = 1 -- highlight the synced line in Skim
+if vim.fn.has("mac") == 1 then
+  vim.g.vimtex_view_method = "skim"
+  vim.g.vimtex_view_skim_sync = 1 -- forward-search to Skim after each compile
+  vim.g.vimtex_view_skim_activate = 1 -- bring Skim to the foreground on view
+  vim.g.vimtex_view_skim_reading_bar = 1 -- highlight the synced line in Skim
+else
+  vim.g.vimtex_view_method = "general"
+end
 
 -- Load the plugin.
 vim.pack.add({ "https://github.com/lervag/vimtex" })
