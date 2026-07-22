@@ -13,6 +13,14 @@ opt.cursorline = true
 opt.scrolloff = 5
 opt.signcolumn = "yes"
 
+-- Mouse & clipboard. mouse=a makes a plain drag a *buffer* selection (excludes
+-- the number/sign gutter — Shift+drag grabs those rendered cells instead, which
+-- is why gutter text leaks into copies). unnamedplus routes plain y/p through the
+-- system clipboard: pbcopy locally, or the OSC 52 provider below over SSH. Net:
+-- drag-select + y lands clean on the Mac clipboard, no line numbers.
+opt.mouse = "a"
+opt.clipboard = "unnamedplus"
+
 -- Colours
 opt.termguicolors = true
 opt.background = "dark"
