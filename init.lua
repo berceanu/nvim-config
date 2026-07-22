@@ -260,19 +260,6 @@ lspconfig.lua_ls.setup({
 -- For the default config, along with instructions on how to customize the settings
 -- require('lspconfig').ruff_lsp.setup{}
 
--- Configure typst language server
-require('lspconfig').typst_lsp.setup{
-  capabilities = capabilities,
-  settings = {
-    exportPdf = "onType" -- Choose onType, onSave or never.
-  }
-}
-
--- Associate .typ files with typst filetype
-vim.cmd [[
-  au BufRead,BufNewFile *.typ set filetype=typst
-]]
-
 -- Setup telescope.
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
