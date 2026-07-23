@@ -36,6 +36,10 @@
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
+    "smart-splits.nvim": {
+      "rev": "68861c68f1cf34dab4cdb22f094d4531cd26560a",
+      "src": "https://github.com/mrjones2014/smart-splits.nvim"
+    },
     "typst-preview.nvim": {
       "rev": "1c2e19486397be1c580b560fc50ee36abe329c46",
       "src": "https://github.com/chomosuke/typst-preview.nvim"
