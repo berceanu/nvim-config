@@ -2,30 +2,11 @@
 
 local opt = vim.opt_local
 
--- Soft-wrap prose without inserting hard line breaks.
-opt.wrap = true
-opt.linebreak = true
-
--- Spell-check OFF by default (physics jargon isn't in the dictionary, so the
--- underlines are mostly noise). Toggle on for a proofreading pass with
--- <localleader>ss; then <localleader>z fixes the word under the cursor.
-opt.spell = false
-opt.spelllang = { "en_us" }
-vim.keymap.set("n", "<localleader>ss", function()
-  vim.wo.spell = not vim.wo.spell
-  vim.notify("spell " .. (vim.wo.spell and "on" or "off"))
-end, { buffer = true, desc = "Toggle spell check" })
+require("config.prose").setup()
 
 -- Conceal maths/markup (\alpha → α, \\ hidden, etc.); reveal on the cursor line.
 opt.conceallevel = 2
 opt.concealcursor = ""
-
--- Treat wrapped display lines as real lines when moving with j/k.
-vim.keymap.set({ "n", "x" }, "j", "gj", { buffer = true })
-vim.keymap.set({ "n", "x" }, "k", "gk", { buffer = true })
-
--- Fix the word under the cursor to the first spelling suggestion.
-vim.keymap.set("n", "<localleader>z", "1z=", { buffer = true, desc = "Fix spelling" })
 
 -- VimTeX already provides the core maps under <localleader> (default `\`):
 --   \ll  toggle continuous compilation      \lv  forward-search to the PDF

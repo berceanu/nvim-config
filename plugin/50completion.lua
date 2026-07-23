@@ -3,8 +3,7 @@
 --   * keyword completion from the current buffers ('complete')
 --   * LuaSnip for snippet expansion
 -- <Tab> drives everything; <C-Space> force-triggers the omni menu.
--- (When you later add an LSP, `vim.lsp.completion.enable({ autotrigger = true })`
---  gives an as-you-type popup with zero plugins.)
+-- LSP clients enable Neovim's as-you-type completion in 74lsp.lua.
 
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.pumheight = 12

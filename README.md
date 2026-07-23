@@ -1,106 +1,139 @@
 # nvim-config
 
-A LaTeX-focused Neovim configuration. Pure Lua, no external plugin manager —
-plugins are managed by the built-in [`vim.pack`](https://neovim.io/doc/user/pack.html)
-(Neovim **0.12+**).
+A compact Neovim configuration for scientific software and technical writing.
+It uses Neovim’s native `vim.pack`, LSP, completion, diagnostics, statusline,
+and filetype support instead of plugin-manager, completion, lint, formatter, or
+task-runner frameworks.
 
-Based on the [Sussman Lab (Neo)vim + LaTeX guide](https://www.dmsussman.org/resources/vimandlatex/)
-and Elijan Mastnak's [Vim + LaTeX series](https://ejmastnak.com/tutorials/vim-latex/intro/),
-adapted for macOS + Skim.
+## Design
+
+The 13 locked plugins have bounded roles:
+
+| Role | Packages |
+|---|---|
+| parsing and language intelligence | `nvim-treesitter`, `nvim-lspconfig` |
+| search, Git, and files | `fzf-lua`, `gitsigns.nvim`, `oil.nvim` |
+| technical writing | `vimtex`, `LuaSnip`, `typst-preview.nvim`, `nabla.nvim` |
+| editing ergonomics | `nvim-surround`, `smart-splits.nvim`, `which-key.nvim` |
+| appearance | `catppuccin` |
+
+There is deliberately no Mason, `nvim-cmp`, Conform, `nvim-lint`, DAP,
+Neotest, terminal, project, or build-runner plugin. Host package profiles own
+language executables; project lockfiles and build systems own project tools.
 
 ## Requirements
 
-- Neovim ≥ 0.12
-- A TeX distribution with `latexmk` (MacTeX / TeX Live)
-- [Skim.app](https://skim-app.sourceforge.io/) as the PDF viewer
+- Neovim 0.12 or newer
+- `tree-sitter` CLI 0.26.1 or newer, a C compiler, `tar`, and `curl` to build
+  the parsers selected by the locked `nvim-treesitter` checkout
+- `fzf` and `rg` for finders
 
-Pure Lua — **no compilers or build tools required**. Every plugin is Lua-only.
+Language services activate only when their executable and, for Julia, its
+dedicated environment are present:
+
+| Files | Service | Host prerequisite |
+|---|---|---|
+| Python | basedpyright + Ruff | `basedpyright-langserver`, `ruff` |
+| Fortran | fortls | `fortls`; add a project `.fortls` when includes or preprocessing need help |
+| C, C++, CUDA | clangd | `clangd` and a project `compile_commands.json` |
+| Rust | rust-analyzer | `rust-analyzer` |
+| Julia | LanguageServer.jl | `julia` plus `scripts/setup-julia-lsp.sh` |
+| JavaScript/TypeScript/TSX | typescript-language-server | host wrapper; projects pin their own `typescript` |
+| Typst | tinymist | `tinymist` |
+
+VimTeX uses `latexmk` when available and otherwise falls back to Tectonic.
+Skim provides forward/inverse search on macOS.
+
+Typst live preview is enabled only on a graphical host with both `tinymist` and
+`websocat` in `PATH`. Both paths are passed explicitly, so the plugin never
+downloads executables. Headless hosts retain Typst parsing, completion,
+diagnostics, and formatting without initializing browser-preview machinery.
 
 ## Layout
 
-```
-init.lua                  enables the module cache; entry point is plugin/
-plugin/                   auto-sourced at startup, in filename order
-  00options.lua           options + leader keys (must load first)
-  02autocmds.lua          general autocommands
-  03keymaps.lua           global key maps
-  10colorscheme.lua       catppuccin
-  20oil.lua               oil.nvim file explorer  (press -)
-  30luasnip.lua           LuaSnip snippet engine
-  40surround.lua          nvim-surround
-  50completion.lua        native completion ergonomics (Tab-driven, no plugin)
-  60whichkey.lua          which-key
-  62fzflua.lua            fzf-lua finder
-  64gitsigns.lua          gitsigns
-  66nabla.lua             nabla (math preview)
-  70statusline.lua        native Lua statusline (no plugin)
-  80latex.lua             VimTeX (set BEFORE loading; Skim viewer)
-after/ftplugin/
-  tex.lua                 spell, conceal, soft-wrap, local maps
-  bib.lua                 BibTeX buffer settings
-lua/luasnip/
-  all.lua                 global snippets
-  tex.lua                 LaTeX snippets (math-aware autosnippets)
-scripts/
-  setup-skim.sh           configure Skim for inverse search (run once)
+```text
+init.lua                    module cache and architecture notes
+plugin/                     ordered options, mappings, and package setup
+after/ftplugin/             prose, TeX, Typst, Markdown, RST, and BibTeX settings
+lua/config/languages.lua    single parser/LSP/language-matrix inventory
+lua/config/prose.lua        shared soft-wrap and opt-in spell behavior
+lua/config/health.lua       headless language-matrix validation
+lua/luasnip/                global and math-aware LaTeX snippets
+julia-lsp/Project.toml      reviewed isolated Julia LSP environment
+scripts/check-config.sh     read-only headless configuration test
+scripts/setup-julia-lsp.sh  guarded Julia LSP bootstrap/update
+scripts/setup-skim.sh       one-time Skim inverse-search setup
+nvim-pack-lock.json         exact plugin commits
 ```
 
-## First launch
+## Install and validate
 
-1. `nvim` — `vim.pack` clones every plugin on the first start. Nothing to
-   compile; restart once cloning finishes.
-2. Configure Skim for inverse search (once):
-   ```sh
-   ~/.config/nvim/scripts/setup-skim.sh
-   osascript -e 'quit app "Skim"'   # then reopen Skim
-   ```
-   In Skim → Settings → Sync you should now see the preset command `nvim`.
+The dotfiles repository owns the locked checkout and fleet workflow:
 
-## LaTeX workflow (localleader is `\`)
+```sh
+~/.dotfiles/prewarm.sh
+~/.config/nvim/scripts/check-config.sh
+nvim-plugin-check
+```
 
-| Key        | Action                                   |
-|------------|------------------------------------------|
-| `\ll`      | toggle continuous compilation (latexmk)  |
-| `\lv`      | forward-search: jump Skim to the cursor  |
-| `\lc`      | clean auxiliary files                    |
-| `\le`      | show the error/warning list              |
-| `\lt`      | table of contents                        |
-| `\lk`      | stop compilation                         |
-| `Cmd-Shift-Click` in Skim | inverse-search back to the source line |
+Prewarm installs and updates every requested parser revision, then runs the
+headless matrix check. That check validates filetype detection, parser loading,
+all eight LSP definitions, and the complete locked plugin set.
 
-Text objects: `ie`/`ae` (environment), `i$`/`a$` (maths), `id`/`ad`
-(delimiter). Motions: `]]`/`[[` (sections), `]m`/`[m` (environments).
+Set up Julia once per host:
 
-### Snippets
+```sh
+~/.config/nvim/scripts/setup-julia-lsp.sh
+~/.config/nvim/scripts/setup-julia-lsp.sh --check
+```
 
-Math-aware, expanded by [LuaSnip](https://github.com/L3MON4D3/LuaSnip). A few
-examples (see `lua/luasnip/tex.lua` for the full list, edit and reload with
-`<leader>L`):
+`--update` deliberately resolves newer compatible Julia packages. The script
+refuses to replace a changed `Project.toml`.
 
-| Trigger | Expands to            | Where        |
-|---------|-----------------------|--------------|
-| `mk`    | `$…$`                 | outside math |
-| `dm`    | display-math block    | outside math |
-| `//`    | `\frac{…}{…}`         | inside math  |
-| `beg`   | `\begin{}…\end{}`     | line start   |
-| `;a`    | `\alpha` (`;b` → β …) | inside math  |
+Configure Skim once on macOS:
 
-## Completion (native — no plugin)
+```sh
+~/.config/nvim/scripts/setup-skim.sh
+osascript -e 'quit app "Skim"'
+```
 
-Completion comes from Neovim itself: VimTeX sets `omnifunc` in `.tex` buffers
-(`\cite`, `\ref`, environments, files) and LuaSnip handles snippets.
+## Project metadata
 
-`<Tab>` open completion / next item / expand-jump snippet · `<S-Tab>` previous ·
-`<C-Space>` force the omni menu · `<CR>` confirm · `<C-k>`/`<C-j>` snippet
-expand/jump. Add an LSP later and `vim.lsp.completion.enable({autotrigger=true})`
-gives an as-you-type popup with zero plugins.
+clangd is only as accurate as the compilation database. For CMake projects:
 
-## Managing plugins
+```sh
+cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+ln -s build/compile_commands.json compile_commands.json
+```
 
-- `:lua vim.pack.update()` — update all plugins (opens a confirmable diff)
-- `:lua =vim.pack.get()` — list installed plugins
-- Add one: put `vim.pack.add({ "https://github.com/owner/repo" })` in a
-  `plugin/*.lua` file, then restart.
+For Make-based projects, run the real build through Bear:
 
-The previous lazy.nvim configuration is preserved on the `archive/lazy-nvim`
-git branch.
+```sh
+bear -- make
+```
+
+Do not invent global flags in Neovim. Commit a project `.clangd` or `.fortls`
+only when the build genuinely needs include paths, preprocessing, or
+toolchain-specific options.
+
+## Daily keys
+
+| Key | Action |
+|---|---|
+| `<space>ff` / `fg` / `fb` | files / live grep / buffers |
+| `K`, `grn`, `gra`, `grr`, `gri` | hover, rename, action, references, implementation |
+| `]d` / `[d`, `<space>e` | diagnostics |
+| `<space>cf` / `<space>ci` | LSP format / toggle inlay hints |
+| `Tab`, `S-Tab`, `C-Space`, `Enter` | native completion |
+| `<space>tp` | toggle Typst preview when its explicit prerequisites exist |
+| `\ss` / `\z` | toggle spell checking / accept first correction in prose |
+
+VimTeX keeps its standard local-leader workflow: `\ll` compile, `\lv` view,
+`\lc` clean, `\le` errors, and `\lt` table of contents.
+
+## Updating
+
+Use `:lua vim.pack.update()` to review plugin updates. After accepting one,
+refresh `nvim-pack-lock.json`, run prewarm and the headless check, commit this
+repository, and then update the locked `nvim-config` commit in the dotfiles
+repository. A dirty checkout is intentionally never reconciled automatically.

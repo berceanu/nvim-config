@@ -3,6 +3,12 @@
 
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 
+-- fzf-lua starts a local RPC socket while loading. The isolated headless
+-- configuration check validates the locked package without opening a server.
+if vim.env.NVIM_CONFIG_CHECK == "1" then
+  return
+end
+
 require("fzf-lua").setup({})
 
 local map = vim.keymap.set

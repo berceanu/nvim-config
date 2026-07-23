@@ -2,28 +2,21 @@
 -- under lsp/; Neovim's built-in vim.lsp.enable drives them. Each server is
 -- enabled only if its binary is installed, so nothing errors when one is absent.
 --
--- Install the servers yourself (outside this config), e.g.:
---   Python: pip install basedpyright ruff   (or: uv tool install …)
---   Typst:  brew install tinymist  /  cargo install tinymist
---   Rust:   rustup component add rust-analyzer   (or brew install rust-analyzer)
---   C++:    Xcode CLT / brew install llvm / apt install clangd  (provides clangd)
--- On Linux servers, install-linux.sh installs all of these into ~/.local/bin.
+-- Server installation stays outside Neovim. The dotfiles Linux core provides
+-- Python, Fortran, Typst, Rust, and x86_64 clangd; the macOS research profile
+-- adds the rolling research/editor tools. Julia uses the dedicated environment
+-- created by scripts/setup-julia-lsp.sh. TypeScript projects keep TypeScript
+-- itself project-local; only the small LSP wrapper is host-level.
 --
 -- Neovim 0.11 already provides the default LSP maps: K (hover), grn (rename),
 -- gra (code action), grr (references), gri (implementation), ]d / [d, gO.
 
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
-local servers = {
-  basedpyright = "basedpyright-langserver", -- Python: types, hover, completion
-  ruff = "ruff", -- Python: lint + format (fast)
-  tinymist = "tinymist", -- Typst: LSP
-  rust_analyzer = "rust-analyzer", -- Rust: LSP (types, inlay hints, clippy)
-  clangd = "clangd", -- C/C++: LSP
-}
-for name, bin in pairs(servers) do
-  if vim.fn.executable(bin) == 1 then
-    vim.lsp.enable(name)
+local languages = require("config.languages")
+for _, server in ipairs(languages.servers) do
+  if languages.server_available(server) then
+    vim.lsp.enable(server.name)
   end
 end
 
