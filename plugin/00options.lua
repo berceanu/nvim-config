@@ -45,7 +45,9 @@ opt.breakindent = true
 opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣", extends = "›", precedes = "‹" }
 
--- Files: no backup/swap, but keep persistent undo history
+-- Files: reload clean buffers changed by external tools, keep persistent undo,
+-- and avoid backup/swap files.
+opt.autoread = true
 opt.backup = false
 opt.swapfile = false
 opt.undofile = true

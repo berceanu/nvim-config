@@ -4,6 +4,16 @@ local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 local grp = augroup("UserAutocmds", { clear = true })
 
+-- Notice files changed by agents or other external tools. With 'autoread',
+-- checktime reloads clean buffers while preserving and warning about local
+-- unsaved changes.
+autocmd({ "FocusGained", "BufEnter", "WinEnter", "CursorHold", "CursorHoldI" }, {
+  group = grp,
+  callback = function()
+    vim.cmd("checktime")
+  end,
+})
+
 -- Keep splits balanced when the terminal window is resized.
 autocmd("VimResized", {
   group = grp,
