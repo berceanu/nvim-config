@@ -7,12 +7,12 @@ task-runner frameworks.
 
 ## Design
 
-The 13 locked plugins have bounded roles:
+The 14 locked plugins have bounded roles:
 
 | Role | Packages |
 |---|---|
 | parsing and language intelligence | `nvim-treesitter`, `nvim-lspconfig` |
-| search, Git, and files | `fzf-lua`, `gitsigns.nvim`, `oil.nvim` |
+| search, Git, and files | `fzf-lua`, `gitsigns.nvim`, `diffview.nvim`, `oil.nvim` |
 | technical writing | `vimtex`, `LuaSnip`, `typst-preview.nvim`, `nabla.nvim` |
 | editing ergonomics | `nvim-surround`, `smart-splits.nvim`, `which-key.nvim` |
 | appearance | `catppuccin` |
@@ -121,6 +121,7 @@ toolchain-specific options.
 | Key | Action |
 |---|---|
 | `<space>ff` / `fg` / `fb` | files / live grep / buffers |
+| `<space>gv` / `gu` / `gh` | review branch / uncommitted changes / current-file history |
 | `K`, `grn`, `gra`, `grr`, `gri` | hover, rename, action, references, implementation |
 | `]d` / `[d`, `<space>e` | diagnostics |
 | `<space>cf` / `<space>ci` | LSP format / toggle inlay hints |
@@ -130,6 +131,23 @@ toolchain-specific options.
 
 VimTeX keeps its standard local-leader workflow: `\ll` compile, `\lv` view,
 `\lc` clean, `\le` errors, and `\lt` table of contents.
+
+## Human-led branch review
+
+Open a branch in its isolated worktree, then launch the complete review:
+
+```sh
+cd ~/Development/project
+wt topic-branch
+nvim +ReviewBranch
+```
+
+`ReviewBranch` compares `HEAD` with `upstream/HEAD` when present, otherwise
+`origin/HEAD`. Pass an explicit base for unusual repositories, for example
+`:ReviewBranch release`. Diffview owns whole-branch and history views;
+Gitsigns remains the buffer-level hunk tool. After an agent makes requested
+edits, `<space>gu` shows only staged and unstaged changes, keeping the human in
+control of what is accepted, tested, committed, and pushed.
 
 ## Updating
 
