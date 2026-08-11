@@ -139,15 +139,16 @@ Open a branch in its isolated worktree, then launch the complete review:
 ```sh
 cd ~/Development/project
 wt topic-branch
-nvim +ReviewBranch
+nvim '+ReviewBranch origin/main'
 ```
 
-`ReviewBranch` compares `HEAD` with `upstream/HEAD` when present, otherwise
-`origin/HEAD`. Pass an explicit base for unusual repositories, for example
-`:ReviewBranch release`. Diffview owns whole-branch and history views;
-Gitsigns remains the buffer-level hunk tool. After an agent makes requested
-edits, `<space>gu` shows only staged and unstaged changes, keeping the human in
-control of what is accepted, tested, committed, and pushed.
+Git does not record the intended target of a future pull request, so
+`ReviewBranch` requires its base explicitly: press `<space>gv`, type a revision
+such as `upstream/dev`, `origin/main`, `release`, or a stacked branch, then
+press Enter. Diffview owns whole-branch and history views; Gitsigns remains the
+buffer-level hunk tool. After an agent makes requested edits, `<space>gu` shows
+only staged and unstaged changes, keeping the human in control of what is
+accepted, tested, committed, and pushed.
 
 ## Updating
 

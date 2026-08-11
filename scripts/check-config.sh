@@ -27,10 +27,6 @@ git -C "$REVIEW_REPO" config user.email test@example.invalid
 printf 'base\n' > "$REVIEW_REPO/tracked"
 git -C "$REVIEW_REPO" add tracked
 git -C "$REVIEW_REPO" commit -qm base
-git -C "$REVIEW_REPO" update-ref refs/remotes/origin/main HEAD
-git -C "$REVIEW_REPO" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
-git -C "$REVIEW_REPO" update-ref refs/remotes/upstream/dev HEAD
-git -C "$REVIEW_REPO" symbolic-ref refs/remotes/upstream/HEAD refs/remotes/upstream/dev
 
 env -u TERM_PROGRAM -u TMUX -u TMUX_PANE \
   XDG_CONFIG_HOME="$RUN_ROOT/config" \
@@ -40,9 +36,9 @@ env -u TERM_PROGRAM -u TMUX -u TMUX_PANE \
   NVIM_CONFIG_CHECK=1 \
   nvim --headless --cmd "cd $REVIEW_REPO" \
     "+lua local ok, err = pcall(require('config.health').check); if not ok then vim.api.nvim_err_writeln(err); vim.cmd('cquit 1') end" \
-    "+lua local review = require('config.review'); assert(review.resolve_base() == 'upstream/dev', 'ReviewBranch did not prefer upstream/HEAD'); assert(review.resolve_base('HEAD') == 'HEAD', 'ReviewBranch rejected explicit base'); assert(review.resolve_base('missing-review-base') == nil, 'ReviewBranch accepted missing base')" \
+    "+lua local review = require('config.review'); assert(review.resolve_base() == nil, 'ReviewBranch guessed a base'); assert(review.resolve_base('HEAD') == 'HEAD', 'ReviewBranch rejected explicit base'); assert(review.resolve_base('missing-review-base') == nil, 'ReviewBranch accepted missing base')" \
     "+lua assert(vim.fn.exists(':DiffviewOpen') == 2 and vim.fn.exists(':ReviewBranch') == 2, 'review commands unavailable')" \
-    "+lua assert(vim.fn.maparg('<leader>gv', 'n', false, true).desc == 'Review branch', 'branch review mapping unavailable')" \
+    "+lua assert(vim.fn.maparg('<leader>gv', 'n', false, true).desc == 'Review branch against base', 'branch review mapping unavailable')" \
     "+qa!"
 
 # Exercise typst-preview with fake, explicitly supplied host binaries and an

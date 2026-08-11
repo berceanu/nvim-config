@@ -1,6 +1,6 @@
--- Resolve and open a pull-request-style branch review without guessing a
--- project-specific base. Forks prefer upstream/HEAD; ordinary clones fall
--- back to origin/HEAD. Callers may always provide an explicit revision.
+-- Open a pull-request-style comparison against an explicit base. Git does not
+-- record a future PR's target branch, so refusing to guess is the only
+-- project-independent behavior.
 
 local M = {}
 
@@ -19,21 +19,13 @@ local function is_commit(revision)
 end
 
 function M.resolve_base(explicit)
-  if explicit and explicit ~= "" then
-    if is_commit(explicit) then
-      return explicit
-    end
-    return nil, ("ReviewBranch: revision %q does not resolve to a commit"):format(explicit)
+  if not explicit or explicit == "" then
+    return nil, "ReviewBranch: provide the intended base, for example :ReviewBranch origin/main"
   end
-
-  for _, remote in ipairs({ "upstream", "origin" }) do
-    local head = git({ "symbolic-ref", "--quiet", "--short", "refs/remotes/" .. remote .. "/HEAD" })
-    if is_commit(head) then
-      return head
-    end
+  if is_commit(explicit) then
+    return explicit
   end
-
-  return nil, "ReviewBranch: no upstream/HEAD or origin/HEAD; use :ReviewBranch <base>"
+  return nil, ("ReviewBranch: revision %q does not resolve to a commit"):format(explicit)
 end
 
 function M.open(explicit)
